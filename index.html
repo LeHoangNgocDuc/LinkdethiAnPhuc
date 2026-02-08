@@ -4,309 +4,152 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>KIỂM TRA TRỰC TUYẾN - AN PHÚC EDUCATION</title>
-  
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  
   <style>
-    /* --- 1. CẤU HÌNH CƠ BẢN --- */
+    /* --- 1. CẤU HÌNH GIAO DIỆN --- */
     :root { 
-      --primary: #1e40af; /* Xanh đậm */
-      --secondary: #3b82f6; /* Xanh sáng */
-      --accent: #f59e0b; /* Cam nhấn */
+      --primary: #1e3a8a; /* Xanh đậm chủ đạo */
+      --secondary: #3b82f6; /* Xanh sáng cho nút/active */
+      --accent: #d97706; /* Cam cho admin */
       --bg: #f3f4f6; 
-      --text: #1f2937;
-      --text-light: #6b7280;
       --white: #ffffff;
+      --text: #1f2937;
       --border: #e5e7eb;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     
-    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-    
-    body { 
-      font-family: 'Roboto', sans-serif; 
-      background: var(--bg); 
-      color: var(--text); 
-      margin: 0; 
-      padding: 0;
-      display: flex; 
-      flex-direction: column; 
-      height: 100vh; 
-      overflow: hidden; /* Chặn cuộn trang chính */
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     
     /* --- 2. HEADER & LOGO --- */
     header { 
-      background: var(--white); 
-      padding: 10px 15px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-      border-bottom: 1px solid var(--border);
-      height: 70px;
-      flex-shrink: 0;
+      background: var(--white); padding: 10px 15px; height: 70px;
+      display: flex; justify-content: space-between; align-items: center; 
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
-
     .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { height: 48px; width: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--secondary); }
+    .brand-text h1 { margin: 0; font-size: 1.1rem; color: var(--primary); text-transform: uppercase; font-weight: 800; }
+    .brand-text p { margin: 0; font-size: 0.75rem; color: #6b7280; }
     
-    .brand img { 
-      height: 45px; 
-      width: 45px; 
-      object-fit: cover; 
-      border-radius: 50%; 
-      border: 2px solid var(--secondary);
-    }
-    
-    .brand h1 { 
-      margin: 0; 
-      font-size: 1.1rem; 
-      font-weight: 700; 
-      color: var(--primary); 
-      text-transform: uppercase; 
-      line-height: 1.2;
-    }
-    
-    .brand h1 span { font-size: 0.8rem; color: var(--text-light); display: block; font-weight: 500; text-transform: none; }
-
     .btn-login { 
-      background: #eff6ff; 
-      color: var(--primary); 
-      border: 1px solid #bfdbfe; 
-      padding: 8px 12px; 
-      border-radius: 8px; 
-      font-size: 0.85rem; 
-      font-weight: 600; 
-      cursor: pointer; 
-      transition: 0.2s;
-      white-space: nowrap;
+      background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; 
+      padding: 8px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem;
     }
-    .btn-login:active { transform: scale(0.95); }
 
     /* --- 3. TABS --- */
-    .tabs { 
-      display: flex; 
-      background: var(--white); 
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
+    .tabs { display: flex; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .tab-btn { 
-      flex: 1; 
-      padding: 14px; 
-      border: none; 
-      background: none; 
-      font-size: 0.95rem; 
-      font-weight: 600; 
-      color: var(--text-light); 
-      cursor: pointer; 
-      position: relative;
+      flex: 1; padding: 15px; border: none; background: none; 
+      font-weight: 600; color: #6b7280; cursor: pointer; position: relative; font-size: 0.95rem;
     }
     .tab-btn.active { color: var(--secondary); background: #f8fafc; }
-    .tab-btn.active::after {
-      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--secondary);
-    }
+    .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--secondary); }
 
-    /* --- 4. LAYOUT CHÍNH --- */
-    .main-container { 
-      flex: 1; 
-      display: flex; 
-      overflow: hidden; 
-      position: relative;
-    }
-
-    /* SIDEBAR (Menu trái) */
-    .sidebar { 
-      width: 350px; 
-      background: var(--white); 
-      border-right: 1px solid var(--border); 
-      overflow-y: auto; 
-      padding: 10px; 
-      display: flex; 
-      flex-direction: column;
-    }
-
-    /* CONTENT (Nội dung phải) */
-    .content-area { 
-      flex: 1; 
-      padding: 20px; 
-      background: #f1f5f9; 
-      overflow-y: auto; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center;
-    }
-
-    /* --- 5. TREE VIEW (Cây thư mục) --- */
-    ul { list-style: none; padding-left: 15px; margin: 0; }
-    li { margin-bottom: 2px; }
+    /* --- 4. LAYOUT CHÍNH (Responsive) --- */
+    .main-container { flex: 1; display: flex; overflow: hidden; }
     
-    .caret { 
-      display: flex; align-items: center; padding: 10px; 
-      border-radius: 6px; font-weight: 600; color: #4b5563; 
-      cursor: pointer; transition: 0.2s; user-select: none;
+    /* Sidebar (Menu) */
+    .sidebar { 
+      width: 320px; background: var(--white); border-right: 1px solid var(--border); 
+      overflow-y: auto; padding: 10px; display: flex; flex-direction: column;
     }
-    .caret:hover { background: #f3f4f6; color: var(--primary); }
+    
+    /* Content (Nội dung) */
+    .content-area { 
+      flex: 1; background: #f9fafb; padding: 20px; overflow-y: auto; 
+      display: flex; flex-direction: column; align-items: center; 
+    }
+
+    /* --- 5. CÂY THƯ MỤC --- */
+    ul { list-style: none; padding-left: 15px; margin: 0; }
+    .caret { 
+      padding: 12px 10px; cursor: pointer; font-weight: 600; color: #374151; 
+      display: flex; align-items: center; border-radius: 6px; user-select: none;
+    }
     .caret::before { content: "▶"; margin-right: 8px; font-size: 0.7rem; color: #9ca3af; transition: 0.2s; }
     .caret-down::before { transform: rotate(90deg); color: var(--secondary); }
+    .caret:hover { background: #f3f4f6; }
     
     .nested { display: none; margin-left: 8px; border-left: 2px solid #e5e7eb; }
     .active { display: block; }
     
     .item-leaf { 
-      padding: 12px 10px; margin: 4px 0; 
-      border-radius: 6px; font-size: 0.95rem; color: #374151; 
-      cursor: pointer; transition: 0.2s; 
-      background: white;
+      padding: 12px 10px; margin: 2px 0; border-radius: 6px; font-size: 0.95rem; 
+      color: #4b5563; cursor: pointer; background: white; transition: 0.1s;
     }
     .item-leaf:active { background: #e0e7ff; }
-    .item-leaf.selected { 
-      background: var(--secondary); color: white; 
-      box-shadow: 0 4px 6px -2px rgba(37, 99, 235, 0.4); 
-      font-weight: 500;
-    }
-    
-    /* Highlight đặc biệt */
-    .special-node > span { color: #db2777; font-weight: bold; }
+    .item-leaf.selected { background: var(--secondary); color: white; font-weight: 500; box-shadow: 0 2px 4px rgba(37,99,235,0.2); }
+    .special-node > div { color: #be185d; font-weight: 700; }
 
-    /* --- 6. EXAM CARD (Thẻ bài thi) --- */
+    /* --- 6. THẺ BÀI THI --- */
     .exam-card { 
-      background: var(--white); 
-      padding: 25px; 
-      border-radius: 16px; 
-      box-shadow: var(--shadow); 
-      width: 100%; 
-      max-width: 600px; 
-      display: none; /* Ẩn mặc định */
-      animation: slideIn 0.3s ease-out;
+      background: var(--white); width: 100%; max-width: 600px; padding: 25px; 
+      border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: none; 
     }
-    
-    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .exam-title { color: var(--primary); font-size: 1.3rem; margin: 0 0 10px 0; text-align: center; }
+    .exam-subtitle { text-align: center; color: #6b7280; margin-bottom: 20px; font-size: 0.9rem; }
 
-    .exam-title { 
-      color: var(--primary); margin: 0 0 10px 0; font-size: 1.4rem; text-align: center; line-height: 1.4; 
-    }
-    .exam-subtitle { 
-      color: var(--text-light); text-align: center; margin-bottom: 25px; font-size: 0.95rem; 
-    }
-
-    /* Code Buttons */
-    .code-list { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-      gap: 12px; 
-      margin-bottom: 25px; 
-    }
-    
+    /* Nút mã đề */
+    .code-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
     .code-wrapper { position: relative; }
-    
     .code-btn { 
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      background: #f9fafb; border: 2px solid #e5e7eb; padding: 15px; 
-      border-radius: 12px; text-decoration: none; color: var(--text); 
-      cursor: pointer; transition: 0.2s; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; 
+      border: 2px solid #e5e7eb; border-radius: 10px; background: #fff; cursor: pointer; transition: 0.2s;
+      text-decoration: none; color: inherit; height: 100%;
     }
-    .code-btn:active { transform: scale(0.97); border-color: var(--secondary); background: #eff6ff; }
+    .code-btn span { font-size: 1.5rem; margin-bottom: 5px; }
+    .code-btn b { color: var(--primary); font-size: 1rem; }
+    .code-btn:active { background: #eff6ff; border-color: var(--secondary); transform: scale(0.98); }
     
-    .code-btn b { color: var(--primary); font-size: 1.1rem; margin-top: 5px; }
-    .code-btn span.icon { font-size: 1.5rem; }
-    .code-btn.empty { border-style: dashed; color: #9ca3af; cursor: default; }
-
-    /* Nút xóa (Admin) */
-    .btn-delete {
-      position: absolute; top: -8px; right: -8px; 
-      background: #ef4444; color: white; border: none; width: 26px; height: 26px; 
-      border-radius: 50%; font-weight: bold; cursor: pointer; 
-      display: none; align-items: center; justify-content: center; 
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 10;
+    .btn-delete { 
+      position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; background: #ef4444; 
+      color: white; border-radius: 50%; border: none; font-weight: bold; cursor: pointer; display: none; 
+      align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .code-wrapper:hover .btn-delete.show { display: flex; }
 
     /* --- 7. ADMIN PANEL --- */
     .admin-panel { 
-      margin-top: 20px; padding: 20px; border-radius: 12px; 
-      background: #fffbeb; border: 1px solid #fcd34d; 
-      display: none; 
+      margin-top: 25px; padding: 15px; background: #fffbeb; border: 1px solid #fcd34d; 
+      border-radius: 10px; display: none; 
     }
     .admin-panel.show { display: block; }
-    
-    .admin-header { font-weight: 700; color: #b45309; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-    
-    .input-group { margin-bottom: 12px; }
-    .input-group label { display: block; font-size: 0.8rem; color: #78350f; margin-bottom: 4px; font-weight: 600; }
-    .input-row { display: flex; gap: 8px; }
-    
-    input[type="text"] { 
-      flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; 
-    }
-    input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); }
-    
-    button.btn-action { 
-      border: none; padding: 0 15px; border-radius: 8px; font-weight: 600; color: white; cursor: pointer;
-    }
+    .admin-header { font-weight: bold; color: #b45309; margin-bottom: 10px; }
+    .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    input { flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; }
+    button.btn-action { padding: 0 15px; border-radius: 6px; border: none; color: white; font-weight: 600; cursor: pointer; }
     .btn-save { background: #f59e0b; }
     .btn-add { background: #10b981; }
     .btn-create { background: #ef4444; width: 100%; padding: 12px; margin-top: 5px; }
 
-    /* --- 8. RESPONSIVE MOBILE (QUAN TRỌNG) --- */
+    /* --- 8. MOBILE RESPONSIVE --- */
     @media (max-width: 768px) {
-      header { height: 60px; padding: 10px; }
-      .brand img { height: 40px; width: 40px; }
-      .brand h1 { font-size: 1rem; }
-      .btn-login { padding: 6px 10px; font-size: 0.8rem; }
-      
       .main-container { flex-direction: column; }
-      
-      /* Trên mobile: Menu ở trên, nội dung ở dưới */
-      .sidebar { 
-        width: 100%; 
-        height: 40vh; /* Chiếm 40% chiều cao */
-        border-right: none; 
-        border-bottom: 1px solid var(--border);
-      }
-      
-      .content-area {
-        height: 60vh; /* Chiếm 60% chiều cao */
-        padding: 15px;
-      }
-      
-      .exam-card { padding: 20px; width: 100%; border-radius: 12px; box-shadow: none; border: 1px solid #e5e7eb; }
-      .code-list { grid-template-columns: repeat(2, 1fr); }
-      
-      /* Ẩn nút xóa trên mobile để đỡ bấm nhầm, muốn xóa thì login PC */
-      .btn-delete.show { display: flex; width: 30px; height: 30px; }
+      .sidebar { width: 100%; height: 40vh; border-right: none; border-bottom: 1px solid var(--border); }
+      .content-area { height: 60vh; padding: 15px; }
+      .exam-card { padding: 15px; border: 1px solid #e5e7eb; box-shadow: none; }
+      .btn-delete.show { display: flex; width: 30px; height: 30px; top: -10px; right: -10px; } /* Hiện luôn nút xóa trên mobile nếu là admin */
     }
 
-    /* --- 9. LOADING & PLACEHOLDER --- */
-    #loading { 
-      position: fixed; top:0; left:0; width:100%; height:100%; 
-      background: rgba(255,255,255,0.95); z-index: 9999; 
-      display: flex; flex-direction: column; justify-content: center; align-items: center; 
-      color: var(--primary); font-weight: 600;
-    }
-    .spinner {
-      width: 40px; height: 40px; border: 4px solid #bfdbfe; 
-      border-top: 4px solid var(--secondary); border-radius: 50%; 
-      animation: spin 1s linear infinite; margin-bottom: 15px;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    .placeholder-msg { 
-      margin-top: 50px; color: var(--text-light); text-align: center; 
-      display: flex; flex-direction: column; align-items: center; 
-    }
-    .placeholder-msg div { font-size: 3rem; margin-bottom: 10px; opacity: 0.3; }
+    /* Loading & Placeholder */
+    #loading { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.9); z-index: 999; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: 600; flex-direction: column; }
+    .spinner { width: 40px; height: 40px; border: 4px solid #bfdbfe; border-top-color: var(--secondary); border-radius: 50%; animation: spin 1s infinite linear; margin-bottom: 10px; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .placeholder { margin-top: 50px; text-align: center; color: #9ca3af; }
+    .placeholder div { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
   </style>
 </head>
 <body>
 
-<div id="loading">
-  <div class="spinner"></div>
-  <div>Đang kết nối dữ liệu...</div>
-</div>
+<div id="loading"><div class="spinner"></div>Đang tải dữ liệu...</div>
 
 <header>
   <div class="brand">
-    <img src="https://raw.githubusercontent.com/LeHoangNgocDuc/LinkdethiAnPhuc/main/logo.jpg" alt="Logo An Phúc">
-    <h1>AN PHÚC EDUCATION <span>Hệ thống kiểm tra trực tuyến</span></h1>
+    <img src="https://raw.githubusercontent.com/LeHoangNgocDuc/LinkdethiAnPhuc/main/logo.jpg" alt="Logo">
+    <div class="brand-text">
+      <h1>AN PHÚC EDUCATION</h1>
+      <p>Kiểm tra trực tuyến</p>
+    </div>
   </div>
   <button class="btn-login" id="loginBtn" onclick="toggleLogin()">🔒 GV</button>
 </header>
@@ -320,41 +163,35 @@
   <div class="sidebar" id="sidebarContent"></div>
   
   <div class="content-area">
-    
-    <div id="placeholder" class="placeholder-msg">
-      <div>👈</div>
-      <span>Vui lòng chọn bài thi từ danh sách</span>
+    <div id="placeholder" class="placeholder">
+      <div>👈</div>Vui lòng chọn bài thi
     </div>
     
     <div id="examCard" class="exam-card">
-      <h2 id="examTitle" class="exam-title">Tên Đề Thi</h2>
+      <h2 id="examTitle" class="exam-title">Tiêu đề bài thi</h2>
       <div class="exam-subtitle">Chọn mã đề để COPY và làm bài:</div>
       
       <div id="codeList" class="code-list"></div>
 
       <div id="adminPanel" class="admin-panel">
-        <div class="admin-header">🛠️ CÔNG CỤ GIÁO VIÊN</div>
+        <div class="admin-header">🛠️ QUẢN LÝ ĐỀ THI</div>
         
-        <div class="input-group" id="editNameGroup">
-           <label>Sửa tên bài thi:</label>
+        <div id="editNameGroup" style="display:none; margin-bottom:10px;">
            <div class="input-row">
-             <input type="text" id="editNameInput">
+             <input type="text" id="editNameInput" placeholder="Sửa tên bài thi...">
              <button class="btn-action btn-save" onclick="saveName()">Lưu</button>
            </div>
         </div>
 
-        <div class="input-group">
-           <label>Thêm mã đề (VD: 101, 102):</label>
-           <div class="input-row">
-             <input type="text" id="addCodeInput" placeholder="Nhập mã...">
-             <button class="btn-action btn-add" onclick="addCode()">+ Thêm</button>
-           </div>
+        <div class="input-row">
+           <input type="text" id="addCodeInput" placeholder="Thêm mã (VD: 101)...">
+           <button class="btn-action btn-add" onclick="addCode()">+ Thêm</button>
         </div>
 
         <div style="margin-top: 15px; border-top: 1px dashed #d97706; padding-top: 10px;">
-           <label style="color:#b45309; margin-bottom:5px; display:block;">➕ TẠO ĐỀ MỚI (Vào mục hiện tại)</label>
-           <input type="text" id="createExamName" placeholder="Tên đề mới..." style="margin-bottom:5px; width:100%">
-           <input type="text" id="createExamCode" placeholder="Mã đề đầu tiên..." style="width:100%">
+           <label style="color:#b45309; display:block; margin-bottom:5px; font-weight:600;">➕ Tạo Đề Mới (Vào mục này)</label>
+           <input type="text" id="newExamName" placeholder="Tên đề mới..." style="margin-bottom:5px; width:100%">
+           <input type="text" id="newExamCode" placeholder="Mã đề đầu tiên..." style="width:100%">
            <button class="btn-action btn-create" onclick="createNewExam()">Tạo Ngay</button>
         </div>
       </div>
@@ -363,65 +200,46 @@
 </div>
 
 <script>
-  // ======================================================
-  // 1. CẤU HÌNH API (LINK THẦY YÊU CẦU)
-  // ======================================================
+  // ====================================================
+  // LINK API CHÍNH XÁC (Đuôi /exec)
+  // ====================================================
   const API_BASE = "https://script.google.com/macros/s/AKfycbzxq3D8DnKbsXRkiO2z76gG0zz6fZIqEvQEVqXjDRjCGWx-o630qndwjNNsTi6A6LNf/exec";
   
-  // Biến toàn cục
   let regularData = [], periodicData = [], isAdmin = false, currentTab = 'regular', currentItem = null;
 
-  // ======================================================
-  // 2. HÀM KẾT NỐI API (SỬ DỤNG FETCH ĐỂ TRÁNH LỖI VERCEL)
-  // ======================================================
+  // Gọi API (Sử dụng fetch để tương thích Vercel)
   async function callAPI(params) {
-    const queryString = new URLSearchParams(params).toString();
-    const url = API_BASE + "?" + queryString;
-    
+    const url = API_BASE + "?" + new URLSearchParams(params).toString();
     try {
-      // mode 'cors' giúp fetch qua domain khác
-      const response = await fetch(url, { method: 'GET' });
-      // Google Script trả về JSON, ta parse nó
-      const data = await response.json(); 
-      return data;
+      const res = await fetch(url); 
+      return await res.json();
     } catch (e) {
-      console.error("Lỗi Fetch:", e);
-      // Fallback cho trường hợp mạng lag hoặc redirect
+      console.error(e);
       return null;
     }
   }
 
   // Khởi tạo
   async function init() {
-    try {
-      const [regRes, perRes] = await Promise.all([
-        callAPI({ action: "getRegular" }),
-        callAPI({ action: "getPeriodic" })
-      ]);
-      
-      if (regRes) regularData = regRes;
-      if (perRes) periodicData = perRes;
-      
-      document.getElementById('loading').style.display = 'none';
-      renderSidebar();
-    } catch (e) {
-      alert("Không thể tải dữ liệu. Vui lòng kiểm tra đường truyền.");
-      document.getElementById('loading').innerText = "Lỗi kết nối!";
-    }
+    const [reg, per] = await Promise.all([
+      callAPI({ action: "getRegular" }),
+      callAPI({ action: "getPeriodic" })
+    ]);
+    if (reg) regularData = reg;
+    if (per) periodicData = per;
+    document.getElementById('loading').style.display = 'none';
+    renderSidebar();
   }
-  
   window.onload = init;
 
-  // ======================================================
-  // 3. LOGIC GIAO DIỆN (SIDEBAR & TABS)
-  // ======================================================
+  // --- LOGIC GIAO DIỆN ---
   function switchTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
     renderSidebar();
     document.getElementById('examCard').style.display = 'none';
-    document.getElementById('placeholder').style.display = 'flex';
+    document.getElementById('placeholder').style.display = 'block';
     currentItem = null;
   }
 
@@ -433,9 +251,8 @@
   }
 
   function renderTree(data, root) {
-    if(!data || data.length === 0) { root.innerHTML = "<div style='text-align:center; padding:20px; color:#999'>Chưa có dữ liệu</div>"; return; }
-    
     const tree = {};
+    if(!data) return;
     data.forEach(item => {
       if (!tree[item.grade]) tree[item.grade] = {};
       if (!tree[item.grade][item.chapter]) tree[item.grade][item.chapter] = [];
@@ -446,17 +263,13 @@
     for (let grade in tree) {
       let li = document.createElement('li');
       li.innerHTML = `<div class="caret" onclick="toggleNested(this)">▶ ${grade}</div>`;
-      
       let chapUl = document.createElement('ul');
       chapUl.className = "nested";
-      
       for (let chap in tree[grade]) {
         let chapLi = document.createElement('li');
         chapLi.innerHTML = `<div class="caret" onclick="toggleNested(this)">▶ ${chap}</div>`;
-        
         let lessonUl = document.createElement('ul');
         lessonUl.className = "nested";
-        
         tree[grade][chap].forEach(lesson => {
            let lessonLi = document.createElement('li');
            lessonLi.className = "item-leaf";
@@ -464,7 +277,6 @@
            lessonLi.onclick = () => selectExam(lesson, 'regular');
            lessonUl.appendChild(lessonLi);
         });
-        
         chapLi.appendChild(lessonUl);
         chapUl.appendChild(chapLi);
       }
@@ -475,9 +287,9 @@
   }
 
   function renderList(data, root) {
-    if(!data) return;
     const order = ["Toán 6", "Toán 7", "Toán 8", "Toán 9", "TS10", "Toán 10", "Toán 11", "Toán 12", "TNTHPT"];
     const grouped = {};
+    if(!data) return;
     data.forEach(i => { if(!grouped[i.category]) grouped[i.category]=[]; grouped[i.category].push(i); });
 
     const ul = document.createElement('ul');
@@ -485,12 +297,9 @@
       if (grouped[cat]) {
         let li = document.createElement('li');
         if (cat === "TS10" || cat === "TNTHPT") li.className = "special-node";
-        
         li.innerHTML = `<div class="caret" onclick="toggleNested(this)">▶ ${cat}</div>`;
-        
         let subUl = document.createElement('ul');
         subUl.className = "nested";
-        
         grouped[cat].forEach(exam => {
            let subLi = document.createElement('li');
            subLi.className = "item-leaf";
@@ -498,7 +307,6 @@
            subLi.onclick = () => selectExam(exam, 'periodic');
            subUl.appendChild(subLi);
         });
-        
         li.appendChild(subUl);
         ul.appendChild(li);
       }
@@ -511,91 +319,74 @@
     elm.classList.toggle("caret-down");
   }
 
-  // ======================================================
-  // 4. LOGIC CHỌN BÀI THI & COPY MÃ
-  // ======================================================
   function selectExam(item, type) {
     currentItem = item;
     currentItem.dataType = type;
-    
-    // Highlight
     document.querySelectorAll('.item-leaf').forEach(el => el.classList.remove('selected'));
     event.target.classList.add('selected');
-    
-    // Show Card
     document.getElementById('placeholder').style.display = 'none';
     document.getElementById('examCard').style.display = 'block';
     document.getElementById('examTitle').innerText = item.displayName || item.lesson;
     
-    // Scroll to top on mobile
-    if(window.innerWidth < 768) {
-       document.querySelector('.content-area').scrollTop = 0;
-    }
+    // Auto scroll top on mobile
+    if(window.innerWidth < 768) document.querySelector('.content-area').scrollTop = 0;
 
     renderCodes(item.code);
     updateAdminUI();
   }
 
+  // --- RENDER MÃ ĐỀ & LIÊN KẾT ---
   function renderCodes(codeStr) {
     const div = document.getElementById('codeList');
     div.innerHTML = "";
-    
-    if(!codeStr) {
-        div.innerHTML = `<div class="code-btn empty" style="width:100%">Chưa có mã đề</div>`;
-        return;
-    }
-    
-    const codes = codeStr.toString().split(',').map(c=>c.trim()).filter(c=>c);
+    if (!codeStr) { div.innerHTML = `<div style="text-align:center; width:100%; color:#999; border:1px dashed #ccc; padding:10px; border-radius:8px;">Chưa có mã đề</div>`; return; }
+
+    const codes = codeStr.toString().split(',').map(c => c.trim()).filter(c => c);
     
     codes.forEach(code => {
       let wrapper = document.createElement('div');
       wrapper.className = 'code-wrapper';
-
-      let btn = document.createElement('div');
-      btn.className = "code-btn";
-      btn.innerHTML = `<span class="icon">📝</span><b>${code}</b>`;
       
-      // LOGIC COPY VÀ MỞ LINK
+      let btn = document.createElement('div');
+      btn.className = 'code-btn';
+      btn.innerHTML = `<span>📝</span><b>${code}</b>`;
+      
+      // LOGIC MỞ LINK: DÙNG ĐÚNG LINK /exec
       btn.onclick = () => {
          navigator.clipboard.writeText(code).then(() => {
              if(confirm(`Đã copy mã: ${code}\n\nNhấn OK để mở trang làm bài.`)) {
                  window.open(API_BASE + "?code=" + encodeURIComponent(code), "_blank");
              }
          }).catch(() => {
-             prompt("Copy thủ công mã này:", code);
+             prompt("Copy thủ công:", code);
              window.open(API_BASE + "?code=" + encodeURIComponent(code), "_blank");
          });
       };
-      
-      // Nút Xóa (Admin)
-      let delBtn = document.createElement('button');
-      delBtn.className = "btn-delete " + (isAdmin ? 'show' : '');
-      delBtn.innerText = "X";
-      delBtn.onclick = (e) => { e.stopPropagation(); deleteCode(code); };
+
+      // Nút xóa (Admin)
+      let del = document.createElement('button');
+      del.className = "btn-delete " + (isAdmin ? 'show' : '');
+      del.innerText = "X";
+      del.onclick = (e) => { e.stopPropagation(); deleteCode(code); };
 
       wrapper.appendChild(btn);
-      wrapper.appendChild(delBtn);
+      wrapper.appendChild(del);
       div.appendChild(wrapper);
     });
   }
 
-  // ======================================================
-  // 5. CHỨC NĂNG ADMIN (GIÁO VIÊN)
-  // ======================================================
+  // --- ADMIN ---
   async function toggleLogin() {
     if (!isAdmin) {
       let p = prompt("Mật khẩu Giáo Viên:");
-      if(!p) return;
-      
-      const res = await callAPI({ action: "login", pass: p });
+      if (!p) return;
+      let res = await callAPI({ action: "login", pass: p });
       if (res && res.valid) {
         isAdmin = true;
         document.getElementById('loginBtn').innerText = "🔓 Đã mở";
         updateAdminUI();
-        alert("Đã đăng nhập thành công!");
-      } else {
-        alert("Sai mật khẩu!");
-      }
+        alert("Đã đăng nhập!");
+      } else alert("Sai mật khẩu");
     } else {
       isAdmin = false;
       document.getElementById('loginBtn').innerText = "🔒 GV";
@@ -605,89 +396,68 @@
 
   function updateAdminUI() {
     const panel = document.getElementById('adminPanel');
-    const deleteBtns = document.querySelectorAll('.btn-delete');
-    
+    const dels = document.querySelectorAll('.btn-delete');
     if (isAdmin) {
       panel.classList.add('show');
-      deleteBtns.forEach(b => b.classList.add('show'));
-      
-      // Hiện ô sửa tên chỉ cho Định kỳ
-      if (currentItem && currentItem.dataType === 'periodic') {
-        document.getElementById('editNameGroup').style.display = 'block';
-        document.getElementById('editNameInput').value = currentItem.displayName || "";
+      dels.forEach(b => b.classList.add('show'));
+      if(currentItem && currentItem.dataType === 'periodic') {
+         document.getElementById('editNameGroup').style.display = 'block';
+         document.getElementById('editNameInput').value = currentItem.displayName || "";
       } else {
-        document.getElementById('editNameGroup').style.display = 'none';
+         document.getElementById('editNameGroup').style.display = 'none';
       }
     } else {
       panel.classList.remove('show');
-      deleteBtns.forEach(b => b.classList.remove('show'));
+      dels.forEach(b => b.classList.remove('show'));
     }
   }
 
-  // --- Thêm Mã ---
   async function addCode() {
-    let code = document.getElementById('addCodeInput').value.trim();
+    let code = document.getElementById('addCodeInput').value;
     if(!code) return;
-    
     let newCodes = currentItem.code ? currentItem.code + "," + code : code;
-    const sheetName = currentItem.dataType === 'periodic' ? 'PeriodicData' : 'RegularData';
-    
-    await callAPI({ action: "updateCode", sheet: sheetName, row: currentItem.row, code: newCodes });
-    
+    let sheet = currentItem.dataType === 'periodic' ? 'PeriodicData' : 'RegularData';
+    await callAPI({ action: "updateCode", sheet: sheet, row: currentItem.row, code: newCodes });
     currentItem.code = newCodes;
     renderCodes(newCodes);
     document.getElementById('addCodeInput').value = "";
-    alert("Đã thêm mã đề!");
+    alert("Đã thêm!");
   }
 
-  // --- Xóa Mã ---
-  async function deleteCode(codeDel) {
-    if(!confirm(`Xóa mã đề "${codeDel}"?`)) return;
-    
-    let codes = currentItem.code.toString().split(',').map(c=>c.trim());
-    let newCodes = codes.filter(c => c !== codeDel).join(",");
-    const sheetName = currentItem.dataType === 'periodic' ? 'PeriodicData' : 'RegularData';
-    
-    await callAPI({ action: "updateCode", sheet: sheetName, row: currentItem.row, code: newCodes });
-    
-    currentItem.code = newCodes;
-    renderCodes(newCodes);
+  async function deleteCode(code) {
+    if(!confirm("Xóa mã này?")) return;
+    let codes = currentItem.code.split(',').map(c=>c.trim()).filter(c=>c!=code).join(",");
+    let sheet = currentItem.dataType === 'periodic' ? 'PeriodicData' : 'RegularData';
+    await callAPI({ action: "updateCode", sheet: sheet, row: currentItem.row, code: codes });
+    currentItem.code = codes;
+    renderCodes(codes);
   }
 
-  // --- Sửa Tên ---
   async function saveName() {
-    let name = document.getElementById('editNameInput').value.trim();
+    let name = document.getElementById('editNameInput').value;
     if(!name) return;
-    
     await callAPI({ action: "updateName", row: currentItem.row, newName: name });
-    
     currentItem.displayName = name;
     document.getElementById('examTitle').innerText = name;
-    renderSidebar(); // Refresh menu
-    alert("Đã cập nhật tên!");
+    renderSidebar();
+    alert("Đã lưu tên!");
   }
 
-  // --- Tạo Đề Mới ---
   async function createNewExam() {
-    if(!currentItem) { alert("Hãy chọn một mục (Lớp) bên trái trước!"); return; }
+    if(!currentItem) { alert("Chọn mục trước!"); return; }
+    let name = document.getElementById('newExamName').value;
+    let code = document.getElementById('newExamCode').value;
+    if(!name) return;
     
-    let name = document.getElementById('createExamName').value.trim();
-    let code = document.getElementById('createExamCode').value.trim();
-    if(!name) { alert("Cần nhập tên đề!"); return; }
-    
-    let sheetName = currentTab === 'periodic' ? 'PeriodicData' : 'RegularData';
+    let sheet = currentItem.dataType === 'periodic' ? 'PeriodicData' : 'RegularData';
     let cat = currentItem.category || currentItem.grade;
     let type = currentItem.examType || currentItem.chapter;
     
-    if(confirm(`Thêm đề mới vào mục "${cat}"?`)) {
-       await callAPI({ action: "addExam", sheet: sheetName, cat: cat, type: type, name: name, code: code });
-       alert("Đã tạo đề mới! Đang tải lại...");
-       
-       // Clear input & Reload
-       document.getElementById('createExamName').value = "";
-       document.getElementById('createExamCode').value = "";
-       init();
-    }
+    await callAPI({ action: "addExam", sheet: sheet, cat: cat, type: type, name: name, code: code });
+    alert("Đã tạo!");
+    document.getElementById('newExamName').value = "";
+    document.getElementById('newExamCode').value = "";
+    init();
   }
 </script>
 
