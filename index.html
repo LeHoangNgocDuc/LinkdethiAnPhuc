@@ -8,9 +8,9 @@
   <style>
     /* --- 1. CẤU HÌNH GIAO DIỆN --- */
     :root { 
-      --primary: #1e3a8a; /* Xanh đậm chủ đạo */
-      --secondary: #3b82f6; /* Xanh sáng cho nút/active */
-      --accent: #d97706; /* Cam cho admin */
+      --primary: #1e3a8a; /* Xanh đậm */
+      --secondary: #3b82f6; /* Xanh sáng */
+      --accent: #f59e0b; /* Cam */
       --bg: #f3f4f6; 
       --white: #ffffff;
       --text: #1f2937;
@@ -22,49 +22,57 @@
     
     /* --- 2. HEADER & LOGO --- */
     header { 
-      background: var(--white); padding: 10px 15px; height: 70px;
+      background: var(--white); padding: 10px 15px; height: 65px;
       display: flex; justify-content: space-between; align-items: center; 
       border-bottom: 1px solid var(--border); flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand img { height: 48px; width: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--secondary); }
-    .brand-text h1 { margin: 0; font-size: 1.1rem; color: var(--primary); text-transform: uppercase; font-weight: 800; }
-    .brand-text p { margin: 0; font-size: 0.75rem; color: #6b7280; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    /* Logo tròn, có viền */
+    .brand img { 
+      height: 42px; width: 42px; border-radius: 50%; object-fit: cover; 
+      border: 2px solid var(--secondary); 
+    }
+    .brand-text h1 { margin: 0; font-size: 1rem; color: var(--primary); text-transform: uppercase; font-weight: 800; line-height: 1.1; }
+    .brand-text p { margin: 0; font-size: 0.7rem; color: #6b7280; font-weight: 500; }
     
     .btn-login { 
       background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; 
-      padding: 8px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem;
+      padding: 6px 12px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 0.8rem;
+      white-space: nowrap; transition: 0.2s;
     }
+    .btn-login:active { background: #dbeafe; transform: scale(0.95); }
 
-    /* --- 3. TABS --- */
+    /* --- 3. TABS (MENU TRÊN) --- */
     .tabs { display: flex; background: var(--white); border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .tab-btn { 
-      flex: 1; padding: 15px; border: none; background: none; 
-      font-weight: 600; color: #6b7280; cursor: pointer; position: relative; font-size: 0.95rem;
+      flex: 1; padding: 12px; border: none; background: none; 
+      font-weight: 600; color: #6b7280; cursor: pointer; position: relative; font-size: 0.9rem;
     }
     .tab-btn.active { color: var(--secondary); background: #f8fafc; }
     .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--secondary); }
 
     /* --- 4. LAYOUT CHÍNH (Responsive) --- */
-    .main-container { flex: 1; display: flex; overflow: hidden; }
+    .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
     
-    /* Sidebar (Menu) */
+    /* Sidebar (Danh sách bài học) */
     .sidebar { 
       width: 320px; background: var(--white); border-right: 1px solid var(--border); 
       overflow-y: auto; padding: 10px; display: flex; flex-direction: column;
     }
     
-    /* Content (Nội dung) */
+    /* Content (Chi tiết bài thi) */
     .content-area { 
       flex: 1; background: #f9fafb; padding: 20px; overflow-y: auto; 
       display: flex; flex-direction: column; align-items: center; 
     }
 
-    /* --- 5. CÂY THƯ MỤC --- */
-    ul { list-style: none; padding-left: 15px; margin: 0; }
+    /* --- 5. CÂY THƯ MỤC (Tree View) --- */
+    ul { list-style: none; padding-left: 12px; margin: 0; }
     .caret { 
-      padding: 12px 10px; cursor: pointer; font-weight: 600; color: #374151; 
+      padding: 10px; cursor: pointer; font-weight: 600; color: #374151; 
       display: flex; align-items: center; border-radius: 6px; user-select: none;
+      font-size: 0.95rem;
     }
     .caret::before { content: "▶"; margin-right: 8px; font-size: 0.7rem; color: #9ca3af; transition: 0.2s; }
     .caret-down::before { transform: rotate(90deg); color: var(--secondary); }
@@ -74,72 +82,120 @@
     .active { display: block; }
     
     .item-leaf { 
-      padding: 12px 10px; margin: 2px 0; border-radius: 6px; font-size: 0.95rem; 
+      padding: 12px 10px; margin: 4px 0; border-radius: 8px; font-size: 0.95rem; 
       color: #4b5563; cursor: pointer; background: white; transition: 0.1s;
+      border: 1px solid transparent;
     }
     .item-leaf:active { background: #e0e7ff; }
-    .item-leaf.selected { background: var(--secondary); color: white; font-weight: 500; box-shadow: 0 2px 4px rgba(37,99,235,0.2); }
-    .special-node > div { color: #be185d; font-weight: 700; }
-
-    /* --- 6. THẺ BÀI THI --- */
-    .exam-card { 
-      background: var(--white); width: 100%; max-width: 600px; padding: 25px; 
-      border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: none; 
+    .item-leaf.selected { 
+      background: var(--secondary); color: white; font-weight: 500; 
+      box-shadow: 0 2px 4px rgba(37,99,235,0.3); border-color: var(--secondary);
     }
-    .exam-title { color: var(--primary); font-size: 1.3rem; margin: 0 0 10px 0; text-align: center; }
+    .special-node > div { color: #be185d; font-weight: 800; }
+
+    /* --- 6. THẺ BÀI THI & NÚT MÃ ĐỀ --- */
+    .exam-card { 
+      background: var(--white); width: 100%; max-width: 600px; padding: 20px; 
+      border-radius: 16px; box-shadow: 0 4px 15px -3px rgba(0,0,0,0.1); display: none; 
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .exam-title { color: var(--primary); font-size: 1.25rem; margin: 0 0 5px 0; text-align: center; font-weight: 700; }
     .exam-subtitle { text-align: center; color: #6b7280; margin-bottom: 20px; font-size: 0.9rem; }
 
-    /* Nút mã đề */
-    .code-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+    /* Grid Nút Mã Đề */
+    .code-list { 
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; 
+    }
     .code-wrapper { position: relative; }
+    
     .code-btn { 
       display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; 
-      border: 2px solid #e5e7eb; border-radius: 10px; background: #fff; cursor: pointer; transition: 0.2s;
-      text-decoration: none; color: inherit; height: 100%;
+      border: 2px solid #e5e7eb; border-radius: 12px; background: #fff; cursor: pointer; transition: 0.2s;
+      text-decoration: none; color: inherit; height: 100%; min-height: 80px;
     }
-    .code-btn span { font-size: 1.5rem; margin-bottom: 5px; }
-    .code-btn b { color: var(--primary); font-size: 1rem; }
-    .code-btn:active { background: #eff6ff; border-color: var(--secondary); transform: scale(0.98); }
+    .code-btn span { font-size: 1.8rem; margin-bottom: 5px; }
+    .code-btn b { color: var(--primary); font-size: 1.1rem; font-family: monospace; }
+    .code-btn:active { background: #eff6ff; border-color: var(--secondary); transform: scale(0.96); }
     
+    /* Nút Xóa (Admin) */
     .btn-delete { 
-      position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; background: #ef4444; 
+      position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; background: #ef4444; 
       color: white; border-radius: 50%; border: none; font-weight: bold; cursor: pointer; display: none; 
       align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      font-size: 14px; z-index: 5;
     }
     .code-wrapper:hover .btn-delete.show { display: flex; }
 
     /* --- 7. ADMIN PANEL --- */
     .admin-panel { 
       margin-top: 25px; padding: 15px; background: #fffbeb; border: 1px solid #fcd34d; 
-      border-radius: 10px; display: none; 
+      border-radius: 12px; display: none; 
     }
     .admin-panel.show { display: block; }
-    .admin-header { font-weight: bold; color: #b45309; margin-bottom: 10px; }
+    .admin-header { font-weight: bold; color: #b45309; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; }
     .input-row { display: flex; gap: 8px; margin-bottom: 10px; }
-    input { flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; }
-    button.btn-action { padding: 0 15px; border-radius: 6px; border: none; color: white; font-weight: 600; cursor: pointer; }
+    input { flex: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; }
+    button.btn-action { padding: 0 15px; border-radius: 8px; border: none; color: white; font-weight: 600; cursor: pointer; }
     .btn-save { background: #f59e0b; }
     .btn-add { background: #10b981; }
     .btn-create { background: #ef4444; width: 100%; padding: 12px; margin-top: 5px; }
 
-    /* --- 8. MOBILE RESPONSIVE --- */
+    /* --- 8. MOBILE RESPONSIVE (TỐI ƯU ĐIỆN THOẠI) --- */
     @media (max-width: 768px) {
       .main-container { flex-direction: column; }
-      .sidebar { width: 100%; height: 40vh; border-right: none; border-bottom: 1px solid var(--border); }
-      .content-area { height: 60vh; padding: 15px; }
-      .exam-card { padding: 15px; border: 1px solid #e5e7eb; box-shadow: none; }
-      .btn-delete.show { display: flex; width: 30px; height: 30px; top: -10px; right: -10px; } /* Hiện luôn nút xóa trên mobile nếu là admin */
+      
+      /* Trên điện thoại: Menu cao 45%, Nội dung 55% */
+      .sidebar { width: 100%; height: 40vh; border-right: none; border-bottom: 1px solid var(--border); padding: 5px; }
+      .content-area { height: 60vh; padding: 15px; background: #fff; }
+      
+      .exam-card { padding: 15px; border: none; box-shadow: none; max-width: 100%; }
+      .code-list { grid-template-columns: repeat(2, 1fr); } /* 2 cột trên mobile */
+      
+      /* Nút xóa luôn hiện trên mobile để dễ bấm */
+      .btn-delete.show { display: flex; top: -10px; right: -10px; }
+      
+      /* Font size điều chỉnh */
+      .brand-text h1 { font-size: 0.9rem; }
+      .exam-title { font-size: 1.1rem; }
     }
 
-    /* Loading & Placeholder */
-    #loading { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.9); z-index: 999; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: 600; flex-direction: column; }
+    /* --- 9. LOADING & PLACEHOLDER --- */
+    #loading { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; color: var(--primary); font-weight: 600; flex-direction: column; }
     .spinner { width: 40px; height: 40px; border: 4px solid #bfdbfe; border-top-color: var(--secondary); border-radius: 50%; animation: spin 1s infinite linear; margin-bottom: 10px; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
-    .placeholder { margin-top: 50px; text-align: center; color: #9ca3af; }
+    
+    .placeholder { margin-top: 60px; text-align: center; color: #9ca3af; }
     .placeholder div { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
   </style>
 </head>
 <body>
+
+<script>
+  // Link Backend Google Apps Script
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxq3D8DnKbsXRkiO2z76gG0zz6fZIqEvQEVqXjDRjCGWx-o630qndwjNNsTi6A6LNf/exec";
+
+  // Kiểm tra nếu có mã đề trên URL (Ví dụ: trungtamanphuc.io.vn?code=ABC)
+  const urlParams = new URLSearchParams(window.location.search);
+  const codeParam = urlParams.get('code');
+
+  if (codeParam) {
+    // Hiển thị màn hình chờ chuyển hướng
+    document.write(`
+      <div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:sans-serif;color:#1e3a8a;">
+        <div style="width:50px;height:50px;border:5px solid #bfdbfe;border-top:5px solid #2563eb;border-radius:50%;animation:s 1s infinite linear;"></div>
+        <h3 style="margin-top:20px;">Đang kết nối đến bài thi ${codeParam}...</h3>
+        <p>Vui lòng đợi trong giây lát</p>
+        <style>@keyframes s {100%{transform:rotate(360deg)}}</style>
+      </div>
+    `);
+    // Chuyển hướng sang Google Script để xử lý link gốc
+    window.location.href = GOOGLE_SCRIPT_URL + "?code=" + encodeURIComponent(codeParam);
+    // Dừng tải phần còn lại của trang
+    window.stop(); 
+  }
+</script>
 
 <div id="loading"><div class="spinner"></div>Đang tải dữ liệu...</div>
 
@@ -169,7 +225,7 @@
     
     <div id="examCard" class="exam-card">
       <h2 id="examTitle" class="exam-title">Tiêu đề bài thi</h2>
-      <div class="exam-subtitle">Chọn mã đề để COPY và làm bài:</div>
+      <div class="exam-subtitle">Chọn mã đề để làm bài:</div>
       
       <div id="codeList" class="code-list"></div>
 
@@ -200,26 +256,21 @@
 </div>
 
 <script>
-  // ====================================================
-  // LINK API CHÍNH XÁC (Đuôi /exec)
-  // ====================================================
-  const API_BASE = "https://script.google.com/macros/s/AKfycbzxq3D8DnKbsXRkiO2z76gG0zz6fZIqEvQEVqXjDRjCGWx-o630qndwjNNsTi6A6LNf/exec";
+  // Link API dùng để lấy dữ liệu (Fetch)
+  // Lưu ý: Đây là cùng 1 link với redirect, nhưng dùng cho việc lấy JSON
+  const API_BASE = "https://script.google.com/macros/s/AKfycbw4lhL3qwgcrlJD0QRoemyOmqIoxdE2a465Um7gnSkbElyicHcnCMfq95yPN7dGjTE6NQ/exec";
   
   let regularData = [], periodicData = [], isAdmin = false, currentTab = 'regular', currentItem = null;
 
-  // Gọi API (Sử dụng fetch để tương thích Vercel)
   async function callAPI(params) {
     const url = API_BASE + "?" + new URLSearchParams(params).toString();
     try {
-      const res = await fetch(url); 
-      return await res.json();
+      const res = await fetch(url); return await res.json();
     } catch (e) {
-      console.error(e);
-      return null;
+      console.error(e); return null;
     }
   }
 
-  // Khởi tạo
   async function init() {
     const [reg, per] = await Promise.all([
       callAPI({ action: "getRegular" }),
@@ -230,9 +281,11 @@
     document.getElementById('loading').style.display = 'none';
     renderSidebar();
   }
-  window.onload = init;
+  
+  // Chỉ chạy init nếu không phải đang redirect (đã check ở đầu trang)
+  if (!codeParam) window.onload = init;
 
-  // --- LOGIC GIAO DIỆN ---
+  // --- LOGIC UI ---
   function switchTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -251,8 +304,8 @@
   }
 
   function renderTree(data, root) {
-    const tree = {};
     if(!data) return;
+    const tree = {};
     data.forEach(item => {
       if (!tree[item.grade]) tree[item.grade] = {};
       if (!tree[item.grade][item.chapter]) tree[item.grade][item.chapter] = [];
@@ -287,9 +340,9 @@
   }
 
   function renderList(data, root) {
+    if(!data) return;
     const order = ["Toán 6", "Toán 7", "Toán 8", "Toán 9", "TS10", "Toán 10", "Toán 11", "Toán 12", "TNTHPT"];
     const grouped = {};
-    if(!data) return;
     data.forEach(i => { if(!grouped[i.category]) grouped[i.category]=[]; grouped[i.category].push(i); });
 
     const ul = document.createElement('ul');
@@ -328,20 +381,19 @@
     document.getElementById('examCard').style.display = 'block';
     document.getElementById('examTitle').innerText = item.displayName || item.lesson;
     
-    // Auto scroll top on mobile
+    // Auto scroll mobile
     if(window.innerWidth < 768) document.querySelector('.content-area').scrollTop = 0;
 
     renderCodes(item.code);
     updateAdminUI();
   }
 
-  // --- RENDER MÃ ĐỀ & LIÊN KẾT ---
   function renderCodes(codeStr) {
     const div = document.getElementById('codeList');
     div.innerHTML = "";
-    if (!codeStr) { div.innerHTML = `<div style="text-align:center; width:100%; color:#999; border:1px dashed #ccc; padding:10px; border-radius:8px;">Chưa có mã đề</div>`; return; }
+    if (!codeStr) { div.innerHTML = `<div style="text-align:center;width:100%;color:#999;border:1px dashed #ccc;padding:10px;">Chưa có mã đề</div>`; return; }
 
-    const codes = codeStr.toString().split(',').map(c => c.trim()).filter(c => c);
+    const codes = codeStr.toString().split(',').map(c=>c.trim()).filter(c=>c);
     
     codes.forEach(code => {
       let wrapper = document.createElement('div');
@@ -351,19 +403,18 @@
       btn.className = 'code-btn';
       btn.innerHTML = `<span>📝</span><b>${code}</b>`;
       
-      // LOGIC MỞ LINK: DÙNG ĐÚNG LINK /exec
+      // LOGIC: Mở link trungtamanphuc.io.vn?code=...
+      // Trang này sẽ tự reload và bắt sự kiện ở đầu trang script để chuyển hướng
       btn.onclick = () => {
          navigator.clipboard.writeText(code).then(() => {
-             if(confirm(`Đã copy mã: ${code}\n\nNhấn OK để mở trang làm bài.`)) {
-                 window.open(API_BASE + "?code=" + encodeURIComponent(code), "_blank");
+             if(confirm(`Đã copy mã: ${code}\n\nNhấn OK để vào thi.`)) {
+                 // Dùng link hiện tại + tham số code
+                 // Ví dụ: https://trungtamanphuc.io.vn?code=123
+                 window.location.href = "?code=" + encodeURIComponent(code);
              }
-         }).catch(() => {
-             prompt("Copy thủ công:", code);
-             window.open(API_BASE + "?code=" + encodeURIComponent(code), "_blank");
          });
       };
 
-      // Nút xóa (Admin)
       let del = document.createElement('button');
       del.className = "btn-delete " + (isAdmin ? 'show' : '');
       del.innerText = "X";
@@ -375,7 +426,7 @@
     });
   }
 
-  // --- ADMIN ---
+  // --- ADMIN FUNCTIONS ---
   async function toggleLogin() {
     if (!isAdmin) {
       let p = prompt("Mật khẩu Giáo Viên:");
@@ -413,7 +464,7 @@
   }
 
   async function addCode() {
-    let code = document.getElementById('addCodeInput').value;
+    let code = document.getElementById('addCodeInput').value.trim();
     if(!code) return;
     let newCodes = currentItem.code ? currentItem.code + "," + code : code;
     let sheet = currentItem.dataType === 'periodic' ? 'PeriodicData' : 'RegularData';
@@ -434,7 +485,7 @@
   }
 
   async function saveName() {
-    let name = document.getElementById('editNameInput').value;
+    let name = document.getElementById('editNameInput').value.trim();
     if(!name) return;
     await callAPI({ action: "updateName", row: currentItem.row, newName: name });
     currentItem.displayName = name;
@@ -445,14 +496,12 @@
 
   async function createNewExam() {
     if(!currentItem) { alert("Chọn mục trước!"); return; }
-    let name = document.getElementById('newExamName').value;
-    let code = document.getElementById('newExamCode').value;
+    let name = document.getElementById('newExamName').value.trim();
+    let code = document.getElementById('newExamCode').value.trim();
     if(!name) return;
-    
     let sheet = currentItem.dataType === 'periodic' ? 'PeriodicData' : 'RegularData';
     let cat = currentItem.category || currentItem.grade;
     let type = currentItem.examType || currentItem.chapter;
-    
     await callAPI({ action: "addExam", sheet: sheet, cat: cat, type: type, name: name, code: code });
     alert("Đã tạo!");
     document.getElementById('newExamName').value = "";
