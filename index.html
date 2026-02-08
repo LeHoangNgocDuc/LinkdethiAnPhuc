@@ -144,7 +144,7 @@
     .exam-subtitle { text-align: center; color: #6b7280; margin-bottom: 20px; font-size: 0.9rem; }
 
     /* Grid Nút Mã Đề */
-    .code-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+    .code-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
     .code-wrapper { position: relative; }
     
     .code-btn { 
@@ -208,29 +208,6 @@
 </head>
 <body>
 
-<script>
-  // Link Gốc Google Apps Script (LINK MỚI NHẤT THẦY GỬI)
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxq3D8DnKbsXRkiO2z76gG0zz6fZIqEvQEVqXjDRjCGWx-o630qndwjNNsTi6A6LNf/exec";
-
-  // Kiểm tra nếu có mã đề trên URL (Ví dụ: trungtamanphuc.io.vn?code=ABC)
-  const urlParams = new URLSearchParams(window.location.search);
-  const codeParam = urlParams.get('code');
-
-  if (codeParam) {
-    // Nếu có mã đề, chuyển hướng ngay sang Google Script
-    document.write(`
-      <div style="display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;font-family:sans-serif;color:#1e3a8a;">
-        <div style="width:50px;height:50px;border:5px solid #bfdbfe;border-top:5px solid #2563eb;border-radius:50%;animation:s 1s infinite linear;"></div>
-        <h3 style="margin-top:20px;">Đang kết nối bài thi...</h3>
-        <p>Hệ thống đang chuyển hướng</p>
-      </div>
-      <style>@keyframes s {100%{transform:rotate(360deg)}}</style>
-    `);
-    window.location.href = GOOGLE_SCRIPT_URL + "?code=" + encodeURIComponent(codeParam);
-    window.stop(); // Dừng tải giao diện chính
-  }
-</script>
-
 <div id="loading"><div class="spinner"></div>Đang tải dữ liệu...</div>
 
 <header>
@@ -259,7 +236,7 @@
     
     <div id="examCard" class="exam-card">
       <h2 id="examTitle" class="exam-title">Tiêu đề bài thi</h2>
-      <div class="exam-subtitle">Chọn mã đề bên dưới để làm bài:</div>
+      <div class="exam-subtitle">Click vào mã đề để <b>COPY</b> và <b>VÀO LÀM BÀI</b>:</div>
       
       <div id="codeList" class="code-list"></div>
 
@@ -290,13 +267,15 @@
 </div>
 
 <script>
-  // Link API lấy dữ liệu (Cập nhật đúng link mới thầy gửi)
-  const API_BASE = "https://script.google.com/macros/s/AKfycbzxq3D8DnKbsXRkiO2z76gG0zz6fZIqEvQEVqXjDRjCGWx-o630qndwjNNsTi6A6LNf/exec";
+  // ====================================================================================
+  // LINK CHÍNH THỨC CỦA HỆ THỐNG
+  // ====================================================================================
+  const API_URL = "https://script.google.com/macros/s/AKfycbw4lhL3qwgcrlJD0QRoemyOmqIoxdE2a465Um7gnSkbElyicHcnCMfq95yPN7dGjTE6NQ/exec";
   
   let regularData = [], periodicData = [], isAdmin = false, currentTab = 'regular', currentItem = null;
 
   async function callAPI(params) {
-    const url = API_BASE + "?" + new URLSearchParams(params).toString();
+    const url = API_URL + "?" + new URLSearchParams(params).toString();
     try {
       const res = await fetch(url); return await res.json();
     } catch (e) {
@@ -305,22 +284,19 @@
   }
 
   async function init() {
-    // Chỉ tải dữ liệu nếu không đang chuyển hướng
-    if (!codeParam) {
-      const [reg, per] = await Promise.all([
-        callAPI({ action: "getRegular" }),
-        callAPI({ action: "getPeriodic" })
-      ]);
-      if (reg) regularData = reg;
-      if (per) periodicData = per;
-      document.getElementById('loading').style.display = 'none';
-      renderSidebar();
-    }
+    const [reg, per] = await Promise.all([
+      callAPI({ action: "getRegular" }),
+      callAPI({ action: "getPeriodic" })
+    ]);
+    if (reg) regularData = reg;
+    if (per) periodicData = per;
+    document.getElementById('loading').style.display = 'none';
+    renderSidebar();
   }
   
   window.onload = init;
 
-  // --- LOGIC UI ---
+  // --- UI LOGIC ---
   function switchTab(tab) {
     currentTab = tab;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -416,13 +392,13 @@
     document.getElementById('examCard').style.display = 'block';
     document.getElementById('examTitle').innerText = item.displayName || item.lesson;
     
-    // Auto scroll mobile
     if(window.innerWidth < 768) document.querySelector('.content-area').scrollTop = 0;
 
     renderCodes(item.code);
     updateAdminUI();
   }
 
+  // --- HIỂN THỊ MÃ ĐỀ & CHUYỂN HƯỚNG ---
   function renderCodes(codeStr) {
     const div = document.getElementById('codeList');
     div.innerHTML = "";
@@ -438,13 +414,12 @@
       btn.className = 'code-btn';
       btn.innerHTML = `<span>📝</span><b>${code}</b>`;
       
-      // LOGIC MỞ LINK: DÙNG URL TRUNG GIAN
+      // LOGIC CHUYỂN HƯỚNG CHÍNH XÁC
       btn.onclick = () => {
          navigator.clipboard.writeText(code).then(() => {
-             if(confirm(`Đã copy mã: ${code}\n\nNhấn OK để vào thi.`)) {
-                 // Reload lại trang hiện tại với tham số code
-                 // Script ở đầu trang sẽ bắt lấy và chuyển hướng
-                 window.location.href = "?code=" + encodeURIComponent(code);
+             if(confirm(`Đã copy mã: ${code}\n\nNhấn OK để vào trang làm bài.`)) {
+                 // Chuyển hướng trực tiếp đến link Google Script
+                 window.open(API_URL + "?code=" + encodeURIComponent(code), "_blank");
              }
          });
       };
